@@ -1,0 +1,2 @@
+epochs,train_loss,train_cost,val_cost
+0,321.64102,48.175274,47.684692
