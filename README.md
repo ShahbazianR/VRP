@@ -1,4 +1,3 @@
-
 # Knowledge-Guided Hybrid Deep Reinforcement Learning for Dynamic Multi-Depot Electric Vehicle Routing Problem
 
 This repository contains code and resources for the paper:
@@ -54,7 +53,7 @@ To use this codebase, clone the repository and install the necessary dependencie
 git clone https://github.com/ShahbazianR/VRP.git
 cd VRP
 pip install -r requirements.txt
-```
+
 
 ## Usage
 
@@ -62,11 +61,6 @@ pip install -r requirements.txt
 2. **Training**: Train the DRL model to generate initial routes.
 3. **Execution**: Run the DRL model, followed by VNS to optimize the route.
 
-Example command:
-
-```bash
-python main.py --config config.yaml
-```
 
 ## Results
 
