@@ -4,18 +4,6 @@ from scipy.spatial.distance import euclidean
 from tqdm import tqdm
 import time
 
-
-## Cordaeu dataset coordinates are scatterred within a range of -100 to 100 => the max of X and Y is typically around 77-99
-## So the coordinates should be first brought to a range of 0-200 and then, 
-##   be scaled using division by 200 to be scaled to a range of 0-1 
-## The maximum value for the depot coordinates is not close to 100, however, as we scaled the customers, we should follow the same path.
-## Maximum Demand value in all dataset instances is 25; So, we can first scale them to 0-10 (as in the random datasets), 
-##   and then, divide them by the capacity of the corresponding graph size. Alternatively, we can also scale them by 
-##   normalizing the demand values (deviding all by the largest number which is 25) => Whichever gets better results is chosen
-## Maximum service time is also 25 in all the instances
-## Ready and due time horizons are around 200 to 700; So, we can divide them by 1000, as the due time for depots 
-##   are from 0 to 1000, and the max horizon is considered to be 1.
-
 if __name__ == "__main__":
     dataset = "Vidal"
 
@@ -25,7 +13,7 @@ if __name__ == "__main__":
     RunTime = dict()
     request_lists = dict()
 
-    file_id = list(range(16, 17)) ## 11-24
+    file_id = list(range(11, 24)) ## 11-24
     routes = {}
     training_times = {}
 

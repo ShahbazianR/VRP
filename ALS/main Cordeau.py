@@ -23,15 +23,17 @@ if __name__ == "__main__":
     Total_Distances = dict()
     Total_Time_Costs = dict()
     RunTime = dict()
-    request_lists = dict()
+    not_seen = dict()
 
     file_id = list(range(1, 21)) ## 1-21
     routes = {}
     training_times = {}
+
+    print("Cordeau Full DS")
     
     for dataset_num_ind in tqdm(list(range(len(file_id))), desc=f"Instances: "):
         dataset_num = file_id[dataset_num_ind]
-        print(f"============ {dataset}_{dataset_num} ============ ")
+        print(f"\n============ {dataset}_{dataset_num} ============ ")
         if dataset_num <=9:
             data_path = "./Dataset/Public/cordeau2001-mdvrptw/pr0"+str(dataset_num)+".txt"
             ds_title = f"pr0{str(dataset_num)}"
@@ -41,9 +43,6 @@ if __name__ == "__main__":
 
         routes[ds_title] = []
         data_df, depot_df, Vehicle_info, data_conf = reading_cordeu_ds(data_path)
-
-        data_df = data_df[0:20]
-        depot_df = depot_df[0:3]
 
         depot_num = len(depot_df)
 
@@ -113,12 +112,28 @@ if __name__ == "__main__":
         final_routes = routes_decompose(final_solution, len(D.keys()))
         total_dist = 0
         total_time_eval = 0
+        served = []
+        seen_clients = []
         for route in final_routes:
-            dist = tour_distance(route, distance_matrix)
-            total_dist += dist
             if len(route) > 2:
-                time_eval = route_time_eval(route, distance_matrix, TTW, ST, alpha=0.1, beta=0.2)
+                dist = tour_distance(route, distance_matrix)
+                total_dist += dist
+                time_eval = route_time_eval(route, distance_matrix, TTW, ST)
+                print(route, dist, total_dist, time_eval)
                 total_time_eval += time_eval
+                served.extend(route)
+                seen_clients.extend(set(route))
+        
+        print("\nServed Clients")
+        # print(sorted(served))
+        print(len(served), len(set(served)))
+        not_seen_count = 0
+        for item in list(C.keys()):
+            if item not in seen_clients:
+                print("Not Seen =>", item)
+                not_seen_count += 1
+        
+        print("Number of Not Seen Clients:", not_seen_count)
 
         print(f"Total Distance {dataset}{ds_title}: ", total_dist)
         finish_time = time.time()
@@ -126,7 +141,7 @@ if __name__ == "__main__":
         Total_Solutions[ds_title] = final_routes
         Total_Time_Costs[ds_title] = total_time_eval
         RunTime[ds_title] = finish_time - start_time
-        request_lists[ds_title] = RL
+        not_seen[ds_title] = {"Not_Seen":not_seen_count, "RL":RL}
 
     print("============================================")
     for key in Total_Distances.keys():
@@ -134,5 +149,5 @@ if __name__ == "__main__":
         print(f"{dataset}_{key} Solution:", Total_Solutions[key])
         print(f"{dataset}_{key} Time Cost:", Total_Time_Costs[key])
         print(f"{dataset}_{key} Run Time:", RunTime[key])
-        print(f"{dataset}_{key} RL:", request_lists[key])
+        print(f"{dataset}_{key} Not_seen:", not_seen[key])
         print("=================================")
